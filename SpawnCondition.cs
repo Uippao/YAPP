@@ -31,4 +31,13 @@ namespace YAPP
             };
         }
     }
+    
+    public class ResolvedCondition
+    {
+        public Types.SpawnConditionType Type { get; set; }
+        public int IntValue { get; set; }
+        public float FloatValue { get; set; }
+        public string StringValue { get; set; }
+        public bool BoolValue { get; set; }
+    }
 }
