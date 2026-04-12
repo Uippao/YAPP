@@ -10,7 +10,9 @@ namespace YAPP
             Weekday,
             NotWeekday,
             Month,
-            NotMonth
+            NotMonth,
+            TimeRange,
+            NotTimeRange
         }
         
         public enum MonthEnum

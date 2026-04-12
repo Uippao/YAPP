@@ -73,6 +73,12 @@ namespace YAPP
 
                 case Types.SpawnConditionType.NotMonth:
                     return MatchMonth(c.StringValue, false);
+                
+                case Types.SpawnConditionType.TimeRange:
+                    return MatchTimeRange(c.StringValue, true);
+
+                case Types.SpawnConditionType.NotTimeRange:
+                    return MatchTimeRange(c.StringValue, false);
 
                 default:
                     return true;
@@ -131,6 +137,33 @@ namespace YAPP
             }
 
             return true;
+        }
+        
+        private static bool MatchTimeRange(string value, bool shouldMatch)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return true;
+
+            var parts = value.Split('-');
+            if (parts.Length != 2)
+                return true;
+
+            if (!TimeSpan.TryParse(parts[0], out var start))
+                return true;
+
+            if (!TimeSpan.TryParse(parts[1], out var end))
+                return true;
+
+            var now = DateTime.Now.TimeOfDay;
+
+            bool result;
+
+            if (start <= end)
+                result = now >= start && now <= end;
+            else
+                result = now >= start || now <= end;
+
+            return shouldMatch ? result : !result;
         }
     }
 }

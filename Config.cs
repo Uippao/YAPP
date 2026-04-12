@@ -29,6 +29,6 @@ namespace YAPP
         public RoomName Room { get; set; }
         public Vector3 Position { get; set; }
         public string PillName { get; set; } = "random";
-        public SpawnCondition Condition { get; set; } = null;
+        public List<SpawnCondition> Conditions { get; set; } = new  List<SpawnCondition>();
     }
 }

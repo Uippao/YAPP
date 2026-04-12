@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using LabApi;
 using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Events.Handlers;
@@ -58,8 +59,11 @@ namespace YAPP
         {
             foreach (var spawn in Config.PillSpawns)
             {
-                if (!Utils.EvaluateCondition(spawn.Condition))
+                if (spawn.Conditions != null && spawn.Conditions.Count > 0 &&
+                    !spawn.Conditions.All(Utils.EvaluateCondition))
+                {
                     continue;
+                }
                 
                 if (Random.NextDouble() > spawn.Chance)
                     continue;
