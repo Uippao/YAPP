@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CustomItems.API;
@@ -61,6 +62,18 @@ namespace YAPP
                 case Types.SpawnConditionType.PlayerCountAtMost:
                     return playerCount <= c.IntValue;
 
+                case Types.SpawnConditionType.Weekday:
+                    return MatchWeekday(c.StringValue, true);
+
+                case Types.SpawnConditionType.NotWeekday:
+                    return MatchWeekday(c.StringValue, false);
+
+                case Types.SpawnConditionType.Month:
+                    return MatchMonth(c.StringValue, true);
+
+                case Types.SpawnConditionType.NotMonth:
+                    return MatchMonth(c.StringValue, false);
+
                 default:
                     return true;
             }
@@ -86,6 +99,38 @@ namespace YAPP
             {
                 { "SCP-500-S.description", "SPEEEED!!!" }
             };
+        }
+        
+        private static bool MatchWeekday(string value, bool shouldMatch)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return true;
+
+            if (!Enum.TryParse<DayOfWeek>(value, true, out var target))
+                return true;
+
+            bool result = DateTime.Now.DayOfWeek == target;
+            return shouldMatch ? result : !result;
+        }
+
+        private static bool MatchMonth(string value, bool shouldMatch)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return true;
+
+            if (int.TryParse(value, out int monthNumber))
+            {
+                bool result = DateTime.Now.Month == monthNumber;
+                return shouldMatch ? result : !result;
+            }
+
+            if (Enum.TryParse<Types.MonthEnum>(value, true, out var monthEnum))
+            {
+                bool result = DateTime.Now.Month == (int)monthEnum;
+                return shouldMatch ? result : !result;
+            }
+
+            return true;
         }
     }
 }
