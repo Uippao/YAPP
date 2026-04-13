@@ -36,7 +36,7 @@ namespace YAPP
         {  
             Instance = this;
             LoadConfigs();
-            CustomItems.API.CustomItems.Register(new Pills.SpeedPill());
+            CustomItems.API.CustomItems.RegisterAll();
             
             ServerEvents.RoundStarting += OnRoundStarting;
             

@@ -103,7 +103,22 @@ namespace YAPP
         {
             public static readonly Dictionary<string, string> Values = new Dictionary<string, string>
             {
-                { "SCP-500-S.description", "SPEEEED!!!" }
+                { "SCP-500-S.description", "Makes you extremely fast for 5 seconds" },
+
+                { "SCP-500-C.description", "Spawns a circle of coins around you" },
+
+                { "SCP-500-A.description", "Makes you faster, tougher and stealthier for 15 seconds, but makes you tired afterwards" },
+
+                { "SCP-500-B.description", "Go out with style by launching a ring of grenades around you" },
+
+                { "SCP-500-G.description", "Become a ghost for 10 seconds (you can walk through doors)" },
+
+                { "SCP-500-H.description", "Gives you 75 AHP" },
+
+                { "SCP-500-I.description", "Turns you invisible for a few seconds" },
+
+                { "SCP-500-T.description", "Resurrects a spectator as a teammate" },
+                { "SCP-500-T.noSpectators", "There are no spectators for you to summon" }
             };
         }
         
@@ -164,6 +179,27 @@ namespace YAPP
                 result = now >= start || now <= end;
 
             return shouldMatch ? result : !result;
+        }
+        
+        public static List<TimedGrenadeProjectile> LaunchGrenadeCircle(Player player, ItemType grenadeType, float velocity = 2f)
+        {
+            List<TimedGrenadeProjectile> grenades = new List<TimedGrenadeProjectile>();
+            Vector3 playerPos = player.Position;
+      
+            for (int i = 0; i < 5; i++)
+            {
+                float angle = (i * 72f) * Mathf.Deg2Rad;
+                
+                TimedGrenadeProjectile grenade = TimedGrenadeProjectile.SpawnActive(playerPos, grenadeType, player);
+                if (grenade != null)
+                {
+                    Vector3 direction = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
+                    grenade.Rigidbody?.AddForce(direction * velocity, ForceMode.Impulse);
+                    grenades.Add(grenade);
+                }
+            }
+      
+            return grenades;
         }
     }
 }
