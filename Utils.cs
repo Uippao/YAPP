@@ -4,6 +4,7 @@ using System.Linq;
 using CustomItems.API;
 using LabApi.Features.Wrappers;
 using MapGeneration;
+using MEC;
 using UnityEngine;
 
 namespace YAPP
@@ -110,6 +111,8 @@ namespace YAPP
                 { "SCP-500-A.description", "Makes you faster, tougher and stealthier for 15 seconds, but makes you tired afterwards" },
 
                 { "SCP-500-B.description", "Go out with style by launching a ring of grenades around you" },
+                
+                { "SCP-500-E.description", "Lay a trail of grenades that explode with delay" },
 
                 { "SCP-500-G.description", "Become a ghost for 10 seconds (you can walk through doors)" },
 
@@ -181,25 +184,60 @@ namespace YAPP
             return shouldMatch ? result : !result;
         }
         
-        public static List<TimedGrenadeProjectile> LaunchGrenadeCircle(Player player, ItemType grenadeType, float velocity = 2f)
+        public static List<TimedGrenadeProjectile> LaunchGrenadeCircle(Player player, ItemType grenadeType, float velocity = 3f)
         {
             List<TimedGrenadeProjectile> grenades = new List<TimedGrenadeProjectile>();
             Vector3 playerPos = player.Position;
-      
+
+            float radius = 0.4f;
+
             for (int i = 0; i < 5; i++)
             {
                 float angle = (i * 72f) * Mathf.Deg2Rad;
-                
-                TimedGrenadeProjectile grenade = TimedGrenadeProjectile.SpawnActive(playerPos, grenadeType, player);
-                if (grenade != null)
+
+                Vector3 spawnPos = new Vector3(
+                    playerPos.x + Mathf.Cos(angle) * radius,
+                    playerPos.y + 0.2f,
+                    playerPos.z + Mathf.Sin(angle) * radius
+                );
+
+                TimedGrenadeProjectile grenade = TimedGrenadeProjectile.SpawnActive(spawnPos, grenadeType, player);
+                if (grenade != null && grenade.Rigidbody != null)
                 {
                     Vector3 direction = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
-                    grenade.Rigidbody?.AddForce(direction * velocity, ForceMode.Impulse);
+
+                    grenade.Rigidbody.linearVelocity = direction * velocity;
+                    grenade.Rigidbody.angularVelocity = Vector3.zero;
+
                     grenades.Add(grenade);
                 }
             }
-      
+
             return grenades;
+        }
+        
+        public static void GrenadeTrail(Player player, ItemType grenadeType)
+        {
+            int count = 6;
+            float interval = 2f;
+            float fuse = 12f;
+
+            for (int i = 0; i < count; i++)
+            {
+                int index = i;
+
+                Timing.CallDelayed(index * interval, () =>
+                {
+                    Vector3 pos = player.Position;
+
+                    TimedGrenadeProjectile.SpawnActive(
+                        pos,
+                        grenadeType,
+                        player,
+                        timeOverride: fuse
+                    );
+                });
+            }
         }
     }
 }

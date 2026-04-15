@@ -107,7 +107,25 @@ namespace YAPP.Pills
 
         public override void OnUsed(PlayerUsedItemEventArgs ev)
         {
-            Utils.LaunchGrenadeCircle(ev.Player, ItemType.GrenadeHE, 1f);
+            Utils.LaunchGrenadeCircle(ev.Player, ItemType.GrenadeHE, 4f);
+        }
+    }
+    
+    public class BoomTrailPill : CustomItem
+    {
+        public override string Name => "SCP-500-E";
+
+        public override string Description => Utils.GetPillText($"{Name}.description");
+
+        public override ItemType Type => ItemType.SCP500;
+
+        public override void OnRegistered() { }
+
+        public override void OnUnregistered() { }
+
+        public override void OnUsed(PlayerUsedItemEventArgs ev)
+        {
+            Utils.GrenadeTrail(ev.Player, ItemType.GrenadeHE);
         }
     }
     

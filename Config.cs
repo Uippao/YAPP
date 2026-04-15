@@ -13,9 +13,15 @@ namespace YAPP
             new PillSpawnConfig
             {
                 Chance = 0.5f,
-                Room = RoomName.HczArmory,
-                Position = new Vector3(0f, 1f, 0f),
-                PillName = "SCP-500-S"
+                PillName = "SCP-500-S",
+                Locations = new List<SpawnLocation>
+                {
+                    new SpawnLocation
+                    {
+                        Room = RoomName.HczArmory,
+                        Position = new Vector3(0f, 1f, 0f)
+                    }
+                }
             }
         };
         
@@ -26,9 +32,15 @@ namespace YAPP
     public class PillSpawnConfig
     {
         public float Chance { get; set; } = 1f;
+        public string PillName { get; set; } = "random";
+
+        public List<SpawnLocation> Locations { get; set; } = new List<SpawnLocation>();
+        public List<SpawnCondition> Conditions { get; set; } = new List<SpawnCondition>();
+    }
+
+    public class SpawnLocation
+    {
         public RoomName Room { get; set; }
         public Vector3 Position { get; set; }
-        public string PillName { get; set; } = "random";
-        public List<SpawnCondition> Conditions { get; set; } = new  List<SpawnCondition>();
     }
 }

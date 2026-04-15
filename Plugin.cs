@@ -61,10 +61,8 @@ namespace YAPP
             {
                 if (spawn.Conditions != null && spawn.Conditions.Count > 0 &&
                     !spawn.Conditions.All(Utils.EvaluateCondition))
-                {
                     continue;
-                }
-                
+
                 if (Random.NextDouble() > spawn.Chance)
                     continue;
 
@@ -77,7 +75,16 @@ namespace YAPP
                         continue;
                 }
 
-                Utils.SpawnPillInRoom(pillName, spawn.Room, spawn.Position);
+                if (spawn.Locations == null || spawn.Locations.Count == 0)
+                    continue;
+
+                var location = spawn.Locations[YAPP.Random.Next(spawn.Locations.Count)];
+
+                Utils.SpawnPillInRoom(
+                    pillName,
+                    location.Room,
+                    location.Position
+                );
             }
         }
         
