@@ -110,18 +110,24 @@ namespace YAPP
 
                 { "SCP-500-A.description", "Makes you faster, tougher and stealthier for 15 seconds, but makes you tired afterwards" },
 
-                { "SCP-500-B.description", "Go out with style by launching a ring of grenades around you" },
-                
-                { "SCP-500-E.description", "Lay a trail of grenades that explode with delay" },
+                { "SCP-500-B.description", "Launches a ring of grenades around you" },
+    
+                { "SCP-500-E.description", "Lays a trail of grenades that explode in sequence" },
 
-                { "SCP-500-G.description", "Become a ghost for 10 seconds (you can walk through doors)" },
+                { "SCP-500-G.description", "Become a ghost for 10 seconds (walk through doors)" },
 
                 { "SCP-500-H.description", "Gives you 75 AHP" },
 
                 { "SCP-500-I.description", "Turns you invisible for a few seconds" },
 
-                { "SCP-500-T.description", "Resurrects a spectator as a teammate" },
-                { "SCP-500-T.noSpectators", "There are no spectators for you to summon" }
+                { "SCP-500-F.description", "Resurrects a spectator as a teammate" },
+                { "SCP-500-F.noSpectators", "There are no spectators for you to summon" },
+
+                { "SCP-500-T.description", "Teleports you to a safe random location" },
+
+                { "SCP-500-W.description", "Enhances your vision temporarily" },
+
+                { "SCP-500-?.description", "Spawns a random pill at your feet" }
             };
         }
         
@@ -216,11 +222,9 @@ namespace YAPP
             return grenades;
         }
         
-        public static void GrenadeTrail(Player player, ItemType grenadeType)
+        public static void GrenadeTrail(Player player, ItemType grenadeType = ItemType.GrenadeHE, int count = 6, float interval = 2f)
         {
-            int count = 6;
-            float interval = 2f;
-            float fuse = 12f;
+            float fuse = count * interval;
 
             for (int i = 0; i < count; i++)
             {
@@ -238,6 +242,82 @@ namespace YAPP
                     );
                 });
             }
+        }
+        
+        public static ExplosiveGrenadeProjectile SpawnInstantExplosion(Player owner)
+        {
+            TimedGrenadeProjectile grenade = TimedGrenadeProjectile.SpawnActive(
+                owner.Position,
+                ItemType.GrenadeHE,
+                owner,
+                timeOverride: 0.0
+            );
+
+            if (grenade is ExplosiveGrenadeProjectile explosiveGrenade)
+            {
+                explosiveGrenade.ScpDamageMultiplier = 3f;
+            }
+
+            return null;
+        }
+        
+        public static List<Room> GetSafeRooms()
+        {
+            HashSet<RoomName> dangerousRooms = new HashSet<RoomName>
+            {
+                RoomName.HczAcroamaticAbatement,
+                RoomName.Lcz173,
+                RoomName.HczWaysideIncinerator,
+                RoomName.EzCollapsedTunnel,
+                RoomName.EzEvacShelter,
+                RoomName.EzIntercom,
+                RoomName.Hcz079,
+                RoomName.Hcz096,
+                RoomName.Hcz049,
+                RoomName.HczTesla,
+                RoomName.HczTestroom,
+                RoomName.HczMicroHID,
+                RoomName.Unnamed,
+                RoomName.Outside,
+                RoomName.Pocket,
+                RoomName.Hcz106,
+                RoomName.EzGateA,
+                RoomName.EzGateB
+            };
+
+            bool lczDecontaminated = Decontamination.IsDecontaminating;
+
+            List<Room> safeRooms = new List<Room>();
+
+            foreach (Room room in Room.List)
+            {
+                if (dangerousRooms.Contains(room.Name))
+                    continue;
+
+                if (lczDecontaminated && room.Zone == FacilityZone.LightContainment)
+                    continue;
+
+                safeRooms.Add(room);
+            }
+
+            return safeRooms;
+        }
+
+        public static Room TeleportToSurfacePosition(Player player)
+        {
+            Vector3[] surfacePositions = new Vector3[]
+            {
+                new Vector3(29.408f, 291.878f, -26.503f),
+                new Vector3(-40.5f, 291.881f, -36.430f),
+                new Vector3(38.584f, 300.958f, -50.593f),
+                new Vector3(138.307f, 295.461f, -64.975f),
+                new Vector3(123.469f, 290.696f, 7.048f)
+            };
+
+            Vector3 randomPosition = surfacePositions[UnityEngine.Random.Range(0, surfacePositions.Length)];
+            player.Position = randomPosition;
+
+            return null;
         }
     }
 }

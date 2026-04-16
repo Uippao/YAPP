@@ -7,6 +7,8 @@ using LabApi.Features.Wrappers;
 using MEC;
 using PlayerRoles;
 using PlayerRoles.Visibility;
+using RueI.API;
+using RueI.API.Elements;
 using UnityEngine;
 
 namespace YAPP.Pills
@@ -187,7 +189,7 @@ namespace YAPP.Pills
     
     public class AllyPill : CustomItem
     {
-        public override string Name => "SCP-500-T";
+        public override string Name => "SCP-500-F";
 
         public override string Description => Utils.GetPillText($"{Name}.description");
 
@@ -202,7 +204,17 @@ namespace YAPP.Pills
             List<Player> spectators = Player.List.Where(p => p.Role == RoleTypeId.Spectator).ToList();
             if (spectators.Count == 0)
             {
-                ev.Player.SendHint(Utils.GetPillText($"{Name}.noSpectators"));
+                RueDisplay display = RueDisplay.Get(ev.Player);
+                display.Remove(new Tag("funnycoins_cooldown"));
+                display.Remove(new Tag("funnycoins_effect"));
+                display.Show(
+                    YAPP.CustomItemsTag,
+                    new BasicElement(
+                        250,
+                        $"<align=left>{Utils.GetPillText($"{Name}.noSpectators")}</align>"
+                        ),
+                    2f
+                    );
                 ev.IsAllowed = false;
             }
         }
@@ -243,6 +255,90 @@ namespace YAPP.Pills
             
             randomSpectator.SetRole(role, RoleChangeReason.RemoteAdmin, RoleSpawnFlags.None);
             randomSpectator.Position = ev.Player.Position;
+        }
+    }
+    
+    public class TeleportPill : CustomItem
+    {
+        public override string Name => "SCP-500-T";
+
+        public override string Description => Utils.GetPillText($"{Name}.description");
+
+        public override ItemType Type => ItemType.SCP500;
+
+        public override void OnRegistered() { }
+
+        public override void OnUnregistered() { }
+
+        public override void OnUsed(PlayerUsedItemEventArgs ev)
+        {
+            if (Warhead.IsDetonated)
+            {
+                Utils.TeleportToSurfacePosition(ev.Player);
+                return;
+            }
+
+            List<Room> safeRooms = Utils.GetSafeRooms();
+
+            if (safeRooms.Count == 0)
+                return;
+
+            Room randomRoom = safeRooms[UnityEngine.Random.Range(0, safeRooms.Count)];
+            ev.Player.Position = randomRoom.Position;
+        }
+    }
+    
+    public class WallhackPill : CustomItem
+    {
+        public override string Name => "SCP-500-W";
+
+        public override string Description => Utils.GetPillText($"{Name}.description");
+
+        public override ItemType Type => ItemType.SCP500;
+
+        public override void OnRegistered() { }
+
+        public override void OnUnregistered() { }
+
+        public override void OnUsed(PlayerUsedItemEventArgs ev)
+        {
+            ev.Player.EnableEffect<Scp1344>(1, 15);
+            ev.Player.EnableEffect<NightVision>(20, 15);
+            ev.Player.EnableEffect<FogControl>(1, 15);
+        }
+    }
+    
+    public class RandomPill : CustomItem
+    {
+        public override string Name => "SCP-500-?";
+
+        public override string Description => Utils.GetPillText($"{Name}.description");
+
+        public override ItemType Type => ItemType.SCP500;
+
+        public override void OnRegistered() { }
+
+        public override void OnUnregistered() { }
+
+        public override void OnUsed(PlayerUsedItemEventArgs ev)
+        {
+            var allPills = CustomItems.API.CustomItems.AllItems
+                .Where(ci => ci.Name.StartsWith("SCP-500") && ci.Name != Name)
+                .ToList();
+
+            if (allPills.Count == 0)
+                return;
+
+            var randomPill = allPills[YAPP.Random.Next(allPills.Count)];
+
+            ushort itemId = CustomItems.API.CustomItems.GetIdByName(randomPill.Name);
+
+            if (itemId == 0)
+                return;
+
+            Vector3 spawnPosition = ev.Player.Position;
+
+            CustomItems.API.CustomItems.TrySpawn(itemId, spawnPosition, out Pickup _);
         }
     }
 }

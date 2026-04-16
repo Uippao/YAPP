@@ -31,6 +31,7 @@ namespace YAPP
 
         public static YAPP Instance { get; private set; }
         internal static readonly Random Random = new Random();
+        public static Tag CustomItemsTag => new Tag("customitems_hint");
     
         public override void Enable()
         {  
