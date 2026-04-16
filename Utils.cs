@@ -108,7 +108,7 @@ namespace YAPP
 
                 { "SCP-500-C.description", "Spawns a circle of coins around you" },
 
-                { "SCP-500-A.description", "Makes you faster, tougher and stealthier for 15 seconds, but makes you tired afterwards" },
+                { "SCP-500-A.description", "Makes you faster, tougher and stealthier for 15 seconds, then tires you" },
 
                 { "SCP-500-B.description", "Launches a ring of grenades around you" },
     
