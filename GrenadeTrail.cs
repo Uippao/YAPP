@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using CommandSystem;
 using LabApi.Features.Permissions;
 using LabApi.Features.Wrappers;
@@ -27,19 +28,7 @@ namespace YAPP.Commands
                 return false;
             }
 
-            if (!int.TryParse(arguments.At(0), out int playerId))
-            {
-                response = $"\"{arguments.At(0)}\" is not a valid player ID.";
-                return false;
-            }
-
-            Player target = Player.Get(playerId);
-
-            if (target == null)
-            {
-                response = $"Player with ID {playerId} not found.";
-                return false;
-            }
+            string targetArg = arguments.At(0);
 
             int count = 6;
             float interval = 2f;
@@ -53,6 +42,31 @@ namespace YAPP.Commands
 
             if (arguments.Count >= 4 && Enum.TryParse(arguments.At(3), true, out ItemType parsedType))
                 grenadeType = parsedType;
+
+            if (targetArg == "*")
+            {
+                foreach (var player in Player.List)
+                {
+                    Utils.GrenadeTrail(player, grenadeType, count, interval);
+                }
+
+                response = $"Spawned grenade trail on ALL players (count={count}, interval={interval}, type={grenadeType}).";
+                return true;
+            }
+
+            if (!int.TryParse(targetArg, out int playerId))
+            {
+                response = $"\"{targetArg}\" is not a valid player ID.";
+                return false;
+            }
+
+            Player target = Player.Get(playerId);
+
+            if (target == null)
+            {
+                response = $"Player with ID {playerId} not found.";
+                return false;
+            }
 
             Utils.GrenadeTrail(target, grenadeType, count, interval);
 

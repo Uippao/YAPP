@@ -284,7 +284,7 @@ namespace YAPP.Pills
                 return;
 
             Room randomRoom = safeRooms[UnityEngine.Random.Range(0, safeRooms.Count)];
-            ev.Player.Position = randomRoom.Position;
+            ev.Player.Position = randomRoom.Position + new Vector3(0f, 1f, 0f);
         }
     }
     

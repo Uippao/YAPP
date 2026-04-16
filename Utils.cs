@@ -123,7 +123,7 @@ namespace YAPP
                 { "SCP-500-F.description", "Resurrects a spectator as a teammate" },
                 { "SCP-500-F.noSpectators", "There are no spectators for you to summon" },
 
-                { "SCP-500-T.description", "Teleports you to a safe random location" },
+                { "SCP-500-T.description", "Teleports you to a random room location" },
 
                 { "SCP-500-W.description", "Enhances your vision temporarily" },
 
