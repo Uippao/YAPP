@@ -10,7 +10,7 @@ namespace YAPP.Commands
     public class GrenadeTrailCommand : ICommand
     {
         public string Command { get; set; } = "grenadetrail";
-        public string[] Aliases { get; set; } = { "gt" };
+        public string[] Aliases { get; set; } = { "gdt" };
         public string Description => "Spawns a grenade trail where the specified player walks.";
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
