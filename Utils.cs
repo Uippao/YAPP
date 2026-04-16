@@ -33,21 +33,32 @@ namespace YAPP
             return pills[YAPP.Random.Next(pills.Count)];
         }
         
-        public static Pickup SpawnPillInRoom(string customItemName, RoomName roomName, Vector3 subcoordinate)
+        public static Pickup SpawnPillInRoom(string customItemName, RoomName roomName, Vector3 offset)
         {
             Room room = Room.Get(roomName).FirstOrDefault();
+
             if (room == null)
+            {
+                DebugLog($"Room not found: {roomName}");
                 return null;
+            }
 
             ushort itemId = CustomItems.API.CustomItems.GetIdByName(customItemName);
-            if (itemId == 0)
-                return null;
 
-            Vector3 finalPosition = room.Position + subcoordinate;
-
-            bool success = CustomItems.API.CustomItems.TrySpawn(itemId, finalPosition, out Pickup pickup);
-            if (!success)
+            if (!CustomItems.API.CustomItems.AllItems.Any(ci =>
+                    CustomItems.API.CustomItems.GetIdByName(ci.Name) == itemId))
+            {
+                DebugLog($"Invalid item ID: {customItemName}");
                 return null;
+            }
+
+            Vector3 position = room.Position + offset;
+
+            if (!CustomItems.API.CustomItems.TrySpawn(itemId, position, out Pickup pickup) || pickup == null)
+            {
+                DebugLog($"TrySpawn failed: {customItemName} at {position}");
+                return null;
+            }
 
             return pickup;
         }

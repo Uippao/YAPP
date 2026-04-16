@@ -101,11 +101,16 @@ namespace YAPP
                     $"Spawning {pillName} in {location.Room} at {location.Position}"
                 );
 
-                Utils.SpawnPillInRoom(
+                Pickup p = Utils.SpawnPillInRoom(
                     pillName,
                     location.Room,
                     location.Position
                 );
+
+                if (p == null)
+                {
+                    Utils.DebugLog($"FAILED spawn: {pillName} in {location.Room}");
+                }
             }
         }
         
