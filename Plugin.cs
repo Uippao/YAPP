@@ -60,26 +60,46 @@ namespace YAPP
         {
             foreach (var spawn in Config.PillSpawns)
             {
+                Utils.DebugLog($"Evaluating spawn: {spawn.PillName}");
+
                 if (spawn.Conditions != null && spawn.Conditions.Count > 0 &&
                     !spawn.Conditions.All(Utils.EvaluateCondition))
+                {
+                    Utils.DebugLog($"Rejected by conditions: {spawn.PillName}");
                     continue;
+                }
 
                 if (Random.NextDouble() > spawn.Chance)
+                {
+                    Utils.DebugLog($"Rejected by chance ({spawn.Chance}): {spawn.PillName}");
                     continue;
+                }
 
                 string pillName = spawn.PillName;
 
                 if (pillName.Equals("random", StringComparison.OrdinalIgnoreCase))
                 {
                     pillName = Utils.GetRandomPillName();
+                    Utils.DebugLog($"Random pill resolved to: {pillName}");
+
                     if (pillName == null)
+                    {
+                        Utils.DebugLog("Random pill resolution failed (no pills available)");
                         continue;
+                    }
                 }
 
                 if (spawn.Locations == null || spawn.Locations.Count == 0)
+                {
+                    Utils.DebugLog($"No locations defined for: {pillName}");
                     continue;
+                }
 
                 var location = spawn.Locations[YAPP.Random.Next(spawn.Locations.Count)];
+
+                Utils.DebugLog(
+                    $"Spawning {pillName} in {location.Room} at {location.Position}"
+                );
 
                 Utils.SpawnPillInRoom(
                     pillName,

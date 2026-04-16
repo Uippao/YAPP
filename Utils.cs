@@ -6,11 +6,20 @@ using LabApi.Features.Wrappers;
 using MapGeneration;
 using MEC;
 using UnityEngine;
+using Logger = LabApi.Features.Console.Logger;
 
 namespace YAPP
 {
     public static class Utils
     {
+        public static void DebugLog(string message)
+        {
+            if (YAPP.Instance?.Config?.Debug != true)
+                return;
+
+            Logger.Debug(message);
+        }
+        
         public static string GetRandomPillName()
         {
             var pills = CustomItems.API.CustomItems.AllItems
