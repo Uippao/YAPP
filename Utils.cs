@@ -45,12 +45,6 @@ namespace YAPP
 
             ushort itemId = CustomItems.API.CustomItems.GetIdByName(customItemName);
 
-            if (itemId == 0)
-            {
-                DebugLog($"Invalid item ID: {customItemName}");
-                return null;
-            }
-
             Vector3 position = room.GameObject.transform.TransformPoint(offset);
 
             if (!CustomItems.API.CustomItems.TrySpawn(itemId, position, out Pickup pickup) || pickup == null)
