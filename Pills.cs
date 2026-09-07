@@ -27,8 +27,9 @@ namespace YAPP.Pills
 
         public override void OnUsed(PlayerUsedItemEventArgs ev)
         {
-            ev.Player.EnableEffect<MovementBoost>(200, 5f);
-            ev.Player.EnableEffect<Invigorated>(1, 5f);
+            ev.Player.EnableEffect<MovementBoost>(200, 7f);
+            ev.Player.EnableEffect<Invigorated>(1, 7f);
+            ev.Player.EnableEffect<Deafened>(1, 7f);
         }
     }
     
@@ -81,10 +82,10 @@ namespace YAPP.Pills
 
         public override void OnUsed(PlayerUsedItemEventArgs ev)
         {
-            ev.Player.EnableEffect<MovementBoost>(50, 15f);
+            ev.Player.EnableEffect<MovementBoost>(25, 15f);
             ev.Player.EnableEffect<Invigorated>(1, 15f);
             ev.Player.EnableEffect<SilentWalk>(10, 15f);
-            ev.Player.EnableEffect<DamageReduction>(100, 15f);
+            ev.Player.EnableEffect<DamageReduction>(150, 15f);
             ev.Player.StaminaRemaining = 1f;
 
             Timing.CallDelayed(15f, () =>
@@ -302,9 +303,9 @@ namespace YAPP.Pills
 
         public override void OnUsed(PlayerUsedItemEventArgs ev)
         {
-            ev.Player.EnableEffect<Scp1344>(1, 15);
-            ev.Player.EnableEffect<NightVision>(20, 15);
-            ev.Player.EnableEffect<FogControl>(1, 15);
+            ev.Player.EnableEffect<Scp1344>(1, 30);
+            ev.Player.EnableEffect<NightVision>(20, 30);
+            ev.Player.EnableEffect<FogControl>(1, 30);
         }
     }
     

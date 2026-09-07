@@ -148,7 +148,7 @@ namespace YAPP
         {
             public static readonly Dictionary<string, string> Values = new Dictionary<string, string>
             {
-                { "SCP-500-S.description", "Makes you extremely fast for 5 seconds" },
+                { "SCP-500-S.description", "Makes you extremely fast for 7 seconds" },
 
                 { "SCP-500-C.description", "Spawns a circle of coins around you" },
 

@@ -31,7 +31,7 @@ namespace YAPP.Commands
             string targetArg = arguments.At(0);
 
             int count = 6;
-            float interval = 2f;
+            float interval = 1.75f;
             ItemType grenadeType = ItemType.GrenadeHE;
 
             if (arguments.Count >= 2 && int.TryParse(arguments.At(1), out int parsedCount))
