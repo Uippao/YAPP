@@ -392,9 +392,12 @@ namespace YAPP.Pills
 
         public override void OnUsed(PlayerUsedItemEventArgs ev)
         {
-            ev.Player.EnableEffect<Poisoned>(10, 10f);
-            ev.Player.EnableEffect<Hemorrhage>(5, 10f);
-            ev.Player.EnableEffect<Disabled>(1, 3f);
+            ev.Player.EnableEffect<Decontaminating>(1);
+            ev.Player.EnableEffect<CardiacArrest>(1);
+            ev.Player.EnableEffect<Poisoned>(1);
+            ev.Player.EnableEffect<Exhausted>(1);
+            ev.Player.EnableEffect<Disabled>(1);
+            ev.Player.EnableEffect<Concussed>(1);
         }
     }
 }
