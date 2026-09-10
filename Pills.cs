@@ -224,6 +224,17 @@ namespace YAPP.Pills
         {
             List<Player> spectators = Player.List.Where(p => p.Role == RoleTypeId.Spectator).ToList();
             
+            if (spectators.Count == 0)
+            {
+                CustomItems.API.CustomItems.TryGive(
+                    CustomItems.API.CustomItems.GetIdByName(Name),
+                    ev.Player,
+                    out Item item
+                );
+
+                return;
+            }
+            
             Player randomSpectator = spectators[YAPP.Random.Next(0, spectators.Count)];
             
             RoleTypeId role;
@@ -309,6 +320,25 @@ namespace YAPP.Pills
         }
     }
     
+    public class CaffeinePill : CustomItem
+    {
+        public override string Name => "SCP-500-K";
+
+        public override string Description => Utils.GetPillText($"{Name}.description");
+
+        public override ItemType Type => ItemType.SCP500;
+
+        public override void OnRegistered() { }
+
+        public override void OnUnregistered() { }
+
+        public override void OnUsed(PlayerUsedItemEventArgs ev)
+        {
+            ev.Player.EnableEffect<Scp207>(2);
+            ev.Player.EnableEffect<Lightweight>(20);
+        }
+    }
+    
     public class RandomPill : CustomItem
     {
         public override string Name => "SCP-500-?";
@@ -323,8 +353,12 @@ namespace YAPP.Pills
 
         public override void OnUsed(PlayerUsedItemEventArgs ev)
         {
+            string cyanideName = YAPP.Instance.Config.CyanideCapsuleName;
+
             var allPills = CustomItems.API.CustomItems.AllItems
-                .Where(ci => ci.Name.StartsWith("SCP-500") && ci.Name != Name)
+                .Where(ci =>
+                    (ci.Name.StartsWith("SCP-500") && ci.Name != Name) ||
+                    ci.Name == cyanideName)
                 .ToList();
 
             if (allPills.Count == 0)
@@ -340,6 +374,27 @@ namespace YAPP.Pills
             Vector3 spawnPosition = ev.Player.Position;
 
             CustomItems.API.CustomItems.TrySpawn(itemId, spawnPosition, out Pickup _);
+        }
+    }
+    
+    public class CyanideCapsule : CustomItem
+    {
+        public override string Name => YAPP.Instance.Config.CyanideCapsuleName;
+
+        public override string Description =>
+            Utils.GetPillText($"cyanide_capsule.description");
+
+        public override ItemType Type => ItemType.SCP500;
+
+        public override void OnRegistered() { }
+
+        public override void OnUnregistered() { }
+
+        public override void OnUsed(PlayerUsedItemEventArgs ev)
+        {
+            ev.Player.EnableEffect<Poisoned>(10, 10f);
+            ev.Player.EnableEffect<Hemorrhage>(5, 10f);
+            ev.Player.EnableEffect<Disabled>(1, 3f);
         }
     }
 }

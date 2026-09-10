@@ -7,6 +7,7 @@ namespace YAPP
     public class Config
     {
         public bool Debug { get; set; } = false;
+        public string CyanideCapsuleName { get; set; } = "Cyanide Capsule";
 
         public List<PillSpawnConfig> PillSpawns { get; set; } = new List<PillSpawnConfig>()
         {
@@ -26,7 +27,10 @@ namespace YAPP
         };
         
         public Dictionary<string, string> CustomText { get; set; }
-            = new Dictionary<string, string>();
+            = new Dictionary<string, string>
+            {
+                { "cyanide_capsule.description", "A potent neurotoxin" }
+            };
     }
 
     public class PillSpawnConfig

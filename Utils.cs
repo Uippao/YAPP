@@ -170,6 +170,8 @@ namespace YAPP
                 { "SCP-500-T.description", "Teleports you to a random room location" },
 
                 { "SCP-500-W.description", "Enhances your vision temporarily" },
+                
+                { "SCP-500-K.description", "Gives you a serious caffeine boost" },
 
                 { "SCP-500-?.description", "Spawns a random pill at your feet" }
             };
