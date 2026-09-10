@@ -381,8 +381,7 @@ namespace YAPP.Pills
     {
         public override string Name => YAPP.Instance.Config.CyanideCapsuleName;
 
-        public override string Description =>
-            YAPP.Instance.Config.CyanideCapsuleName;
+        public override string Description => YAPP.Instance.Config.CyanideCapsuleName;
 
         public override ItemType Type => ItemType.SCP500;
 
