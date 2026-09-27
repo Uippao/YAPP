@@ -214,8 +214,22 @@ namespace YAPP.Pills
                         250,
                         $"<align=left>{Utils.GetPillText($"{Name}.noSpectators")}</align>"
                         ),
-                    2f
+                    3f
                     );
+                ev.IsAllowed = false;
+            } else if (PocketDimension.IsPlayerInside(ev.Player))
+            {
+                RueDisplay display = RueDisplay.Get(ev.Player);
+                display.Remove(new Tag("funnycoins_cooldown"));
+                display.Remove(new Tag("funnycoins_effect"));
+                display.Show(
+                    YAPP.CustomItemsTag,
+                    new BasicElement(
+                        250,
+                        $"<align=left>{Utils.GetPillText($"{Name}.pocket")}</align>"
+                    ),
+                    3f
+                );
                 ev.IsAllowed = false;
             }
         }
@@ -225,6 +239,15 @@ namespace YAPP.Pills
             List<Player> spectators = Player.List.Where(p => p.Role == RoleTypeId.Spectator).ToList();
             
             if (spectators.Count == 0)
+            {
+                CustomItems.API.CustomItems.TryGive(
+                    CustomItems.API.CustomItems.GetIdByName(Name),
+                    ev.Player,
+                    out Item item
+                );
+
+                return;
+            } else if (PocketDimension.IsPlayerInside(ev.Player))
             {
                 CustomItems.API.CustomItems.TryGive(
                     CustomItems.API.CustomItems.GetIdByName(Name),
